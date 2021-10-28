@@ -3,4 +3,6 @@
     <string name="logo_text">MoonlightSplitter</string>
     <string name="support_api">Support API:</string>
     <string name="api_owner">github.com/satyawikananda/rs-bed-covid-indo-api</string>
+    <string name="app_info">Availability of hospitals in Indonesia</string>
+    <string name="province">Province</string>
 </resources>
