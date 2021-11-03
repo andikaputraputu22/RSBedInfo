@@ -7,4 +7,7 @@
     <string name="province">Province</string>
     <string name="city">City</string>
     <string name="type">Type</string>
+    <string name="data_not_found">Data not Found</string>
+    <string name="available_bed">Available bed: </string>
+    <string name="please_wait">Please wait...</string>
 </resources>

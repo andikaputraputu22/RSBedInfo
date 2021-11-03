@@ -8,9 +8,16 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.moonlightsplitter.rsbedinfo.adapter.AdapterHospital
 import com.moonlightsplitter.rsbedinfo.api.Client
+import com.moonlightsplitter.rsbedinfo.models.DataHospital
 import com.moonlightsplitter.rsbedinfo.models.ModelCity
+import com.moonlightsplitter.rsbedinfo.models.ModelHospital
 import com.moonlightsplitter.rsbedinfo.models.ModelProvince
+import com.moonlightsplitter.rsbedinfo.utils.CustomLoading
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,8 +28,14 @@ class MainActivity : AppCompatActivity() {
     lateinit var spinnerProvince: Spinner
     lateinit var spinnerCity: Spinner
     lateinit var spinnerType: Spinner
+    lateinit var noData: TextView
+    private lateinit var listHospital: RecyclerView
+    private lateinit var hospital: ArrayList<DataHospital>
+    private val loading = CustomLoading(this)
 
     private var idProvince: String? = null
+    private var idCity: String? = null
+    private var type: String? = "1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         initComponents()
         getProvinces()
-        getType()
     }
 
     data class Type(
@@ -43,6 +55,8 @@ class MainActivity : AppCompatActivity() {
         spinnerProvince = findViewById(R.id.spinnerProvince)
         spinnerCity = findViewById(R.id.spinnerCity)
         spinnerType = findViewById(R.id.spinnerType)
+        listHospital = findViewById(R.id.listHospital)
+        noData = findViewById(R.id.noData)
     }
 
     private fun getType() {
@@ -59,7 +73,8 @@ class MainActivity : AppCompatActivity() {
         spinnerType.adapter = adapter
         spinnerType.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                //
+                type = dataType[position].id
+                getHospital()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -94,6 +109,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<ModelProvince>, t: Throwable) {
+                isEmptyData(true)
                 Log.e("ERROR GET PROVINCES", t.localizedMessage)
             }
         })
@@ -113,7 +129,8 @@ class MainActivity : AppCompatActivity() {
                     spinnerCity.adapter = adapter
                     spinnerCity.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            //
+                            idCity = data[position].id
+                            getType()
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -124,8 +141,48 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<ModelCity>, t: Throwable) {
+                isEmptyData(true)
                 Log.e("ERROR GET CITIES", t.localizedMessage)
             }
         })
+    }
+
+    private fun getHospital() {
+        loading.startLoading()
+        val adapterHospital = AdapterHospital(type!!)
+        listHospital.layoutManager = LinearLayoutManager(context)
+        listHospital.setHasFixedSize(true)
+        listHospital.adapter = adapterHospital
+        Client.instance.getHospitals(idProvince!!, idCity!!, type!!).enqueue(object: Callback<ModelHospital>{
+            override fun onResponse(call: Call<ModelHospital>, response: Response<ModelHospital>) {
+                loading.isDismiss()
+                if (response.code() == 200) {
+                    if (response.body()!!.hospitals.count() != 0) {
+                        isEmptyData(false)
+                        hospital = response.body()!!.hospitals
+                        adapterHospital.setData(hospital)
+                    } else {
+                        isEmptyData(true)
+                    }
+                } else {
+                    isEmptyData(true)
+                }
+            }
+
+            override fun onFailure(call: Call<ModelHospital>, t: Throwable) {
+                loading.isDismiss()
+                isEmptyData(true)
+            }
+        })
+    }
+
+    private fun isEmptyData(status: Boolean) {
+        if (status) {
+            listHospital.visibility = View.GONE
+            noData.visibility = View.VISIBLE
+        } else {
+            listHospital.visibility = View.VISIBLE
+            noData.visibility = View.GONE
+        }
     }
 }
