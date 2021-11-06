@@ -52,6 +52,7 @@
                     android:id="@+id/addressHospital"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_3sdp"
                     android:text="Jln. Batusari 3 Denpasar"
                     android:textSize="16sp"
                     android:textColor="@android:color/white"
@@ -60,6 +61,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -83,6 +85,7 @@
                             android:id="@+id/phoneHospital"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_3sdp"
                             android:text="081339891936"
                             android:textSize="16sp"
                             android:textColor="@android:color/white"

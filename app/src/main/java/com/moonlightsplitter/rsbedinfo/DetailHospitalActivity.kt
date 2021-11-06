@@ -3,6 +3,7 @@ package com.moonlightsplitter.rsbedinfo
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import com.moonlightsplitter.rsbedinfo.models.DataHospital
 
@@ -13,6 +14,9 @@ class DetailHospitalActivity : AppCompatActivity() {
     }
 
     lateinit var context: Context
+    lateinit var nameHospital: TextView
+    lateinit var addressHospital: TextView
+    lateinit var phoneHospital: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +24,20 @@ class DetailHospitalActivity : AppCompatActivity() {
         context = this
 
         val hospital = intent.getSerializableExtra(EXTRA_HOSPITAL) as DataHospital
-        Toast.makeText(context, hospital.name, Toast.LENGTH_LONG).show()
+
+        initComponents()
+        loadData(hospital)
+    }
+
+    private fun initComponents() {
+        nameHospital = findViewById(R.id.nameHospital)
+        addressHospital = findViewById(R.id.addressHospital)
+        phoneHospital = findViewById(R.id.phoneHospital)
+    }
+
+    private fun loadData(hospital: DataHospital) {
+        nameHospital.text = hospital.name?: "-"
+        addressHospital.text = hospital.address?: "-"
+        phoneHospital.text = hospital.phone?: "-"
     }
 }
