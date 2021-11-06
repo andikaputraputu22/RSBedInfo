@@ -1,16 +1,15 @@
 package com.moonlightsplitter.rsbedinfo
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.moonlightsplitter.rsbedinfo.DetailHospitalActivity.Companion.EXTRA_HOSPITAL
 import com.moonlightsplitter.rsbedinfo.adapter.AdapterHospital
 import com.moonlightsplitter.rsbedinfo.api.Client
 import com.moonlightsplitter.rsbedinfo.models.DataHospital
@@ -161,6 +160,7 @@ class MainActivity : AppCompatActivity() {
                         isEmptyData(false)
                         hospital = response.body()!!.hospitals
                         adapterHospital.setData(hospital)
+                        listAction(adapterHospital)
                     } else {
                         isEmptyData(true)
                     }
@@ -184,5 +184,15 @@ class MainActivity : AppCompatActivity() {
             listHospital.visibility = View.VISIBLE
             noData.visibility = View.GONE
         }
+    }
+
+    private fun listAction(adapterHospital: AdapterHospital) {
+        adapterHospital.setOnItemClickListener(object: AdapterHospital.OnItemClickListener {
+            override fun onItemClicked(hospital: DataHospital) {
+                val intent = Intent(context, DetailHospitalActivity::class.java)
+                intent.putExtra(EXTRA_HOSPITAL, hospital)
+                startActivity(intent)
+            }
+        })
     }
 }

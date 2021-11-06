@@ -7,17 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.moonlightsplitter.rsbedinfo.R
 import com.moonlightsplitter.rsbedinfo.models.DataHospital
 
 class AdapterHospital(private val type: String) : RecyclerView.Adapter<AdapterHospital.DataHospitalViewHolder>() {
 
-    private val hospital = ArrayList<DataHospital>()
+    private val listHospital = ArrayList<DataHospital>()
+    private lateinit var onItemClickListener: OnItemClickListener
 
     inner class DataHospitalViewHolder(view: View): RecyclerView.ViewHolder(view) {
         private val nameHospital = view.findViewById<TextView>(R.id.nameHospital)
         private val locationHospital = view.findViewById<TextView>(R.id.locationHospital)
         private val infoHospital = view.findViewById<TextView>(R.id.infoHospital)
+        private val itemClick = view.findViewById<MaterialCardView>(R.id.itemClick)
 
         fun bindView(hospital: DataHospital, type: String) {
             nameHospital.text = hospital.name?: ""
@@ -34,13 +37,21 @@ class AdapterHospital(private val type: String) : RecyclerView.Adapter<AdapterHo
                 }
                 infoHospital.text = totalBed
             }
+
+            itemClick.setOnClickListener {
+                onItemClickListener.onItemClicked(listHospital[adapterPosition])
+            }
         }
     }
 
     fun setData(itemData: ArrayList<DataHospital>) {
-        hospital.clear()
-        hospital.addAll(itemData)
+        listHospital.clear()
+        listHospital.addAll(itemData)
         notifyDataSetChanged()
+    }
+
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.onItemClickListener = onItemClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataHospitalViewHolder {
@@ -49,10 +60,14 @@ class AdapterHospital(private val type: String) : RecyclerView.Adapter<AdapterHo
     }
 
     override fun onBindViewHolder(holder: DataHospitalViewHolder, position: Int) {
-        holder.bindView(hospital[position], type)
+        holder.bindView(listHospital[position], type)
     }
 
     override fun getItemCount(): Int {
-        return hospital.size
+        return listHospital.size
+    }
+
+    interface OnItemClickListener {
+        fun onItemClicked(hospital: DataHospital)
     }
 }

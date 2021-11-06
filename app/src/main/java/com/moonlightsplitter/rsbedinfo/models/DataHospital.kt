@@ -1,5 +1,7 @@
 package com.moonlightsplitter.rsbedinfo.models
 
+import java.io.Serializable
+
 data class DataHospital(
         var id: String? = null,
         var name: String? = null,
@@ -9,4 +11,4 @@ data class DataHospital(
         var bed_availability: Int? = null,
         var available_beds: List<DataBed>? = null,
         var info: String? = null
-)
+): Serializable

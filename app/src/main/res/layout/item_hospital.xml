@@ -9,6 +9,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:layout_marginBottom="8dp"
+    android:id="@+id/itemClick"
     app:cardBackgroundColor="@color/card_background"
     app:cardCornerRadius="@dimen/_16sdp">
 
