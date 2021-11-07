@@ -1,9 +1,6 @@
 package com.moonlightsplitter.rsbedinfo.api
 
-import com.moonlightsplitter.rsbedinfo.models.ModelBedDetail
-import com.moonlightsplitter.rsbedinfo.models.ModelCity
-import com.moonlightsplitter.rsbedinfo.models.ModelHospital
-import com.moonlightsplitter.rsbedinfo.models.ModelProvince
+import com.moonlightsplitter.rsbedinfo.models.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -23,4 +20,7 @@ interface Api {
     @GET("get-bed-detail")
     fun getBedDetail(@Query("hospitalid") hospitalid: String,
                     @Query("type") type: String): Call<ModelBedDetail>
+
+    @GET("get-hospital-map")
+    fun getHospitalMaps(@Query("hospitalid") hospitalid: String): Call<ModelMaps>
 }

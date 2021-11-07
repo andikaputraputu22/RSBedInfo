@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private var idProvince: String? = null
     private var idCity: String? = null
     private var type: String? = "1"
+    private var selectProvince: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                     spinnerProvince.adapter = adapter
                     spinnerProvince.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            selectProvince = true
                             idProvince = data[position].id
                             getCities(idProvince)
                         }
@@ -115,6 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getCities(idProvince: String?) {
+        loading.startLoading()
         Client.instance.getCities(idProvince!!).enqueue(object: Callback<ModelCity>{
             override fun onResponse(call: Call<ModelCity>, response: Response<ModelCity>) {
                 if (response.code() == 200) {
@@ -140,6 +143,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<ModelCity>, t: Throwable) {
+                loading.isDismiss()
                 isEmptyData(true)
                 Log.e("ERROR GET CITIES", t.localizedMessage)
             }
@@ -147,7 +151,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getHospital() {
-        loading.startLoading()
+        if (!selectProvince) {
+            loading.startLoading()
+        }
+        selectProvince = false
         val adapterHospital = AdapterHospital(type!!)
         listHospital.layoutManager = LinearLayoutManager(context)
         listHospital.setHasFixedSize(true)

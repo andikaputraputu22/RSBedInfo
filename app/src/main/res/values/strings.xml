@@ -12,4 +12,5 @@
     <string name="please_wait">Please wait...</string>
     <string name="address">Address</string>
     <string name="phone">Telepon</string>
+    <string name="no_phone_number">Phone number not available</string>
 </resources>
