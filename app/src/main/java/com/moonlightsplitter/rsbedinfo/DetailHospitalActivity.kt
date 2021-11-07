@@ -5,9 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import com.moonlightsplitter.rsbedinfo.api.Client
 import com.moonlightsplitter.rsbedinfo.models.DataHospital
 import com.moonlightsplitter.rsbedinfo.models.ModelMaps
@@ -27,6 +29,7 @@ class DetailHospitalActivity : AppCompatActivity() {
     lateinit var phoneHospital: TextView
     lateinit var btnCall: ImageButton
     lateinit var btnMap: ImageButton
+    lateinit var toolbar: Toolbar
 
     private var idHospital: String? = null
     private var phoneNumber: String? = null
@@ -39,6 +42,7 @@ class DetailHospitalActivity : AppCompatActivity() {
         val hospital = intent.getSerializableExtra(EXTRA_HOSPITAL) as DataHospital
 
         initComponents()
+        initToolbar()
         loadData(hospital)
         initClick()
     }
@@ -49,6 +53,21 @@ class DetailHospitalActivity : AppCompatActivity() {
         phoneHospital = findViewById(R.id.phoneHospital)
         btnCall = findViewById(R.id.btnCall)
         btnMap = findViewById(R.id.btnMap)
+        toolbar = findViewById(R.id.toolbar)
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        supportActionBar?.title = null
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun loadData(hospital: DataHospital) {
