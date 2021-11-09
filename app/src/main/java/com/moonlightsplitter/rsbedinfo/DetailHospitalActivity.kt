@@ -6,7 +6,9 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageButton
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -30,9 +32,13 @@ class DetailHospitalActivity : AppCompatActivity() {
     lateinit var btnCall: ImageButton
     lateinit var btnMap: ImageButton
     lateinit var toolbar: Toolbar
+    lateinit var viewMap: RelativeLayout
 
     private var idHospital: String? = null
     private var phoneNumber: String? = null
+    private var lat: String? = null
+    private var long: String? = null
+    private var title: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +60,7 @@ class DetailHospitalActivity : AppCompatActivity() {
         btnCall = findViewById(R.id.btnCall)
         btnMap = findViewById(R.id.btnMap)
         toolbar = findViewById(R.id.toolbar)
+        viewMap = findViewById(R.id.viewMap)
     }
 
     private fun initToolbar() {
@@ -86,7 +93,12 @@ class DetailHospitalActivity : AppCompatActivity() {
     private fun getMaps() {
         Client.instance.getHospitalMaps(idHospital!!).enqueue(object: Callback<ModelMaps>{
             override fun onResponse(call: Call<ModelMaps>, response: Response<ModelMaps>) {
-                //
+                if (response.code() == 200) {
+                    viewMap.visibility = View.VISIBLE
+                    lat = response.body()?.data?.lat
+                    long = response.body()?.data?.long
+                    title = response.body()?.data?.name
+                }
             }
 
             override fun onFailure(call: Call<ModelMaps>, t: Throwable) {
@@ -106,7 +118,14 @@ class DetailHospitalActivity : AppCompatActivity() {
         }
 
         btnMap.setOnClickListener {
-
+            if (lat != null && long != null) {
+                val gmmIntentUri = Uri.parse("google.navigation:q=$lat,$long&mode=d&title=$title")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                startActivity(mapIntent)
+            } else {
+                Toast.makeText(context, getString(R.string.no_place), Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

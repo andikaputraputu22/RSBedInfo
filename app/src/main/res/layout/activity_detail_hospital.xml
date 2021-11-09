@@ -130,8 +130,10 @@
                         android:layout_height="0dp" />
 
                     <RelativeLayout
+                        android:id="@+id/viewMap"
                         android:layout_width="40dp"
-                        android:layout_height="40dp">
+                        android:layout_height="40dp"
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="match_parent"
