@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/colorPrimary"
     tools:context=".DetailHospitalActivity">
 
     <ScrollView
@@ -28,13 +28,14 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <LinearLayout
+                android:id="@+id/headerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:orientation="vertical"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp"
                 android:paddingTop="16dp"
+                android:paddingEnd="16dp"
                 android:paddingBottom="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,32 +45,32 @@
                     android:id="@+id/nameHospital"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserratregular"
                     android:text="Sanglah Hospital"
-                    android:textSize="24sp"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/montserratregular" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/addressHospitalLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/montserratregular"
                     android:text="@string/address"
-                    android:textSize="14sp"
                     android:textColor="@android:color/white"
-                    android:fontFamily="@font/montserratregular" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/addressHospital"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_3sdp"
+                    android:fontFamily="@font/montserratmedium"
                     android:text="Jln. Batusari 3 Denpasar"
-                    android:textSize="16sp"
                     android:textColor="@android:color/white"
-                    android:fontFamily="@font/montserratmedium" />
-                
+                    android:textSize="16sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -88,20 +89,20 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_8sdp"
+                            android:fontFamily="@font/montserratregular"
                             android:text="@string/phone"
-                            android:textSize="14sp"
                             android:textColor="@android:color/white"
-                            android:fontFamily="@font/montserratregular" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/phoneHospital"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_3sdp"
+                            android:fontFamily="@font/montserratmedium"
                             android:text="081339891936"
-                            android:textSize="16sp"
                             android:textColor="@android:color/white"
-                            android:fontFamily="@font/montserratmedium" />
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
@@ -120,8 +121,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            app:tint="@color/colorPrimary"
-                            app:srcCompat="@drawable/ic_call" />
+                            app:srcCompat="@drawable/ic_call"
+                            app:tint="@color/colorPrimary" />
 
                     </RelativeLayout>
 
@@ -146,14 +147,80 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            app:tint="@color/colorPrimary"
-                            app:srcCompat="@drawable/ic_map" />
+                            app:srcCompat="@drawable/ic_map"
+                            app:tint="@color/colorPrimary" />
 
                     </RelativeLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="@dimen/_16sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/headerLayout">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_14sdp">
+
+                    <TextView
+                        android:id="@+id/typeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bed_type"
+                        android:fontFamily="@font/montserratmedium"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Spinner
+                        android:id="@+id/spinnerType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/typeLabel" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listBed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardType" />
+
+            <TextView
+                android:id="@+id/noData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/data_not_found"
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/montserratregular"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardType" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

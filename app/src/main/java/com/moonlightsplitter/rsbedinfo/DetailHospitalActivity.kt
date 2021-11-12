@@ -7,14 +7,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageButton
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
+import com.moonlightsplitter.rsbedinfo.adapter.AdapterBed
 import com.moonlightsplitter.rsbedinfo.api.Client
+import com.moonlightsplitter.rsbedinfo.models.BedDetail
 import com.moonlightsplitter.rsbedinfo.models.DataHospital
+import com.moonlightsplitter.rsbedinfo.models.ModelBedDetail
 import com.moonlightsplitter.rsbedinfo.models.ModelMaps
+import com.moonlightsplitter.rsbedinfo.utils.CustomLoading
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,12 +38,18 @@ class DetailHospitalActivity : AppCompatActivity() {
     lateinit var btnMap: ImageButton
     lateinit var toolbar: Toolbar
     lateinit var viewMap: RelativeLayout
+    lateinit var spinnerType: Spinner
+    lateinit var noData: TextView
+    private lateinit var listBed: RecyclerView
+    private lateinit var bed: ArrayList<BedDetail>
+    private val loading = CustomLoading(this)
 
     private var idHospital: String? = null
     private var phoneNumber: String? = null
     private var lat: String? = null
     private var long: String? = null
     private var title: String? = null
+    private var type: String? = "1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +64,11 @@ class DetailHospitalActivity : AppCompatActivity() {
         initClick()
     }
 
+    data class Type(
+            var id: String,
+            var name: String
+    )
+
     private fun initComponents() {
         nameHospital = findViewById(R.id.nameHospital)
         addressHospital = findViewById(R.id.addressHospital)
@@ -61,6 +77,9 @@ class DetailHospitalActivity : AppCompatActivity() {
         btnMap = findViewById(R.id.btnMap)
         toolbar = findViewById(R.id.toolbar)
         viewMap = findViewById(R.id.viewMap)
+        spinnerType = findViewById(R.id.spinnerType)
+        listBed = findViewById(R.id.listBed)
+        noData = findViewById(R.id.noData)
     }
 
     private fun initToolbar() {
@@ -77,6 +96,30 @@ class DetailHospitalActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun getType() {
+        val dataType = arrayOf(
+                Type("1", "Covid"),
+                Type("2", "Non-Covid")
+        )
+        val listType: ArrayList<String> = ArrayList()
+        for (i in 0 until dataType.count()) {
+            listType.addAll(setOf(dataType[i].name))
+        }
+
+        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(context, R.layout.spinner_item, listType)
+        spinnerType.adapter = adapter
+        spinnerType.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                type = dataType[position].id
+                getBed()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //
+            }
+        }
+    }
+
     private fun loadData(hospital: DataHospital) {
         nameHospital.text = hospital.name?: "-"
         addressHospital.text = hospital.address?: "-"
@@ -87,7 +130,47 @@ class DetailHospitalActivity : AppCompatActivity() {
             phoneNumber = hospital.phone
         }
 
+        getType()
         getMaps()
+    }
+
+    private fun getBed() {
+        loading.startLoading()
+        val adapterBed = AdapterBed()
+        listBed.layoutManager = LinearLayoutManager(context)
+        listBed.setHasFixedSize(true)
+        listBed.adapter = adapterBed
+        Client.instance.getBedDetail(idHospital!!, type!!).enqueue(object: Callback<ModelBedDetail>{
+            override fun onResponse(call: Call<ModelBedDetail>, response: Response<ModelBedDetail>) {
+                loading.isDismiss()
+                if (response.code() == 200) {
+                    if (response.body()!!.data.bedDetail!!.count() != 0) {
+                        isEmptyData(false)
+                        bed = response.body()!!.data.bedDetail!!
+                        adapterBed.setData(bed)
+                    } else {
+                        isEmptyData(true)
+                    }
+                } else {
+                    isEmptyData(true)
+                }
+            }
+
+            override fun onFailure(call: Call<ModelBedDetail>, t: Throwable) {
+                loading.isDismiss()
+                isEmptyData(true)
+            }
+        })
+    }
+
+    private fun isEmptyData(status: Boolean) {
+        if (status) {
+            listBed.visibility = View.GONE
+            noData.visibility = View.VISIBLE
+        } else {
+            listBed.visibility = View.VISIBLE
+            noData.visibility = View.GONE
+        }
     }
 
     private fun getMaps() {

@@ -8,10 +8,14 @@
     <string name="city">City</string>
     <string name="type">Type</string>
     <string name="data_not_found">Data not Found</string>
-    <string name="available_bed">Available bed: </string>
     <string name="please_wait">Please wait...</string>
     <string name="address">Address</string>
     <string name="phone">Telepon</string>
     <string name="no_phone_number">Phone number not available</string>
     <string name="no_place">Place not available</string>
+    <string name="bed_type">Bed Type</string>
+    <string name="available_bed">Available Bed</string>
+    <string name="empty_bed">Empty Bed</string>
+    <string name="number_queue">Number of Queues</string>
+    <string name="time">Time</string>
 </resources>

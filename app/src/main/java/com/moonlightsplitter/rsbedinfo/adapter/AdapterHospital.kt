@@ -23,8 +23,8 @@ class AdapterHospital(private val type: String) : RecyclerView.Adapter<AdapterHo
         private val itemClick = view.findViewById<MaterialCardView>(R.id.itemClick)
 
         fun bindView(hospital: DataHospital, type: String) {
-            nameHospital.text = hospital.name?: ""
-            locationHospital.text = (hospital.address?: "")
+            nameHospital.text = hospital.name?: "-"
+            locationHospital.text = (hospital.address?: "-")
             if (type == "1") {
                 val totalBed: String = "Available bed: ${hospital.bed_availability?: 0}"
                 infoHospital.text = totalBed
