@@ -19,4 +19,8 @@ class StaticController {
         }
         return result
     }
+
+    fun testB(): String {
+        return "Anjay"
+    }
 }

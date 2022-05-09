@@ -25,4 +25,8 @@ class CustomLoading(val mActivity: Activity) {
     fun isDismiss() {
         dialog.dismiss()
     }
+
+    fun test() {
+
+    }
 }
